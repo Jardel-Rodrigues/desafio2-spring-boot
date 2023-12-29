@@ -1,15 +1,20 @@
 package com.softstrem.desafio2.Entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -31,18 +36,25 @@ public class Atividade implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")
 	private Categoria categoria;
-	
+
+	@ManyToMany(mappedBy = "atividades")
+	private Set<Participante> participantes = new HashSet<>();
+
+	@OneToOne(mappedBy = "atividade", cascade = CascadeType.ALL)
+	private Bloco blocos;
+
 	public Atividade() {
 
 	}
 
-	public Atividade(Long id, String nome, String descricao, Double preco, Categoria categoria) {
+	public Atividade(Long id, String nome, String descricao, Double preco, Categoria categoria, Bloco blocos) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
 		this.preco = preco;
 		this.categoria = categoria;
+		this.blocos = blocos;
 	}
 
 	public Long getId() {
@@ -77,11 +89,28 @@ public class Atividade implements Serializable {
 		this.preco = preco;
 	}
 
-
-
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	public Set<Participante> getParticipantes() {
+		return participantes;
+	}
+
+	public Bloco getBloco() {
+		return blocos;
+	}
+
+	public void setBloco(Bloco blocos) {
+		this.blocos = blocos;
 	}
 
 	@Override
